@@ -1,0 +1,16 @@
+# ~/.skill-space/config.toml
+# List all skill git repos to index into your local space.
+# trust: high | medium | low — influences result ranking.
+
+[[repos]]
+url   = "https://github.com/roebi/agent-skills"
+trust = "high"
+
+[[repos]]
+url   = "https://github.com/roebi/new-work-skills"
+trust = "high"
+
+# Example: third-party repo with lower trust
+# [[repos]]
+# url   = "https://github.com/someone/community-skills"
+# trust = "low"
