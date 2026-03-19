@@ -66,7 +66,7 @@ class Store:
 
     def _init_schema(self) -> None:
         try:
-            import sqlite_vec  # type: ignore
+            import sqlite_vec
 
             self.conn.load_extension(sqlite_vec.loadable_path())
             self.conn.execute(CREATE_SKILL_VECS)

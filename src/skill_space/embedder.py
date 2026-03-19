@@ -7,7 +7,7 @@ from functools import lru_cache
 
 @lru_cache(maxsize=1)
 def _model():
-    from sentence_transformers import SentenceTransformer  # type: ignore
+    from sentence_transformers import SentenceTransformer  # type: ignore[import-untyped]
 
     return SentenceTransformer("all-MiniLM-L6-v2")  # 80MB, 384-dim, offline-capable
 
