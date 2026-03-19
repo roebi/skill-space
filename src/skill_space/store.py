@@ -96,8 +96,9 @@ class Store:
             """,
             skill,
         )
+        row = cur.fetchone()[0]
         self.conn.commit()
-        return cur.fetchone()[0]
+        return row
 
     def store_embedding(self, skill_id: int, vector: list[float]) -> None:
         import json
