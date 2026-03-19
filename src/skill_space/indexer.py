@@ -21,6 +21,7 @@ def _load_config() -> dict:
     if not CONFIG_PATH.exists():
         return {"repos": []}
     import tomllib  # py 3.11+
+
     return tomllib.loads(CONFIG_PATH.read_text())
 
 
@@ -35,15 +36,27 @@ def _parse_skill_md(path: Path) -> Optional[dict]:
     except yaml.YAMLError:
         return None
     # Extract body description (first non-empty line after frontmatter)
-    body = text[match.end():].strip()
+    body = text[match.end() :].strip()
     first_para = body.split("\n\n")[0].strip().lstrip("#").strip()
     return {
         "name": fm.get("name", path.parent.name),
-        "skill_class": fm.get("metadata", {}).get("skill-class") if isinstance(fm.get("metadata"), dict) else None,
-        "crud_verb": fm.get("metadata", {}).get("crud-verb") if isinstance(fm.get("metadata"), dict) else None,
-        "topic": fm.get("metadata", {}).get("topic") if isinstance(fm.get("metadata"), dict) else None,
-        "requires_role": fm.get("metadata", {}).get("requires-role") if isinstance(fm.get("metadata"), dict) else None,
-        "language": "en" if path.parent.name.endswith("-en") else fm.get("metadata", {}).get("lang", "en") if isinstance(fm.get("metadata"), dict) else "en",
+        "skill_class": fm.get("metadata", {}).get("skill-class")
+        if isinstance(fm.get("metadata"), dict)
+        else None,
+        "crud_verb": fm.get("metadata", {}).get("crud-verb")
+        if isinstance(fm.get("metadata"), dict)
+        else None,
+        "topic": fm.get("metadata", {}).get("topic")
+        if isinstance(fm.get("metadata"), dict)
+        else None,
+        "requires_role": fm.get("metadata", {}).get("requires-role")
+        if isinstance(fm.get("metadata"), dict)
+        else None,
+        "language": "en"
+        if path.parent.name.endswith("-en")
+        else fm.get("metadata", {}).get("lang", "en")
+        if isinstance(fm.get("metadata"), dict)
+        else "en",
         "description": first_para,
         "fuzzy_tags": json.dumps(_extract_tags(fm, body)),
         "last_indexed": datetime.now(timezone.utc).isoformat(),
@@ -69,7 +82,9 @@ class Indexer:
         repos = [{"url": repo_url, "trust": "high"}] if repo_url else config.get("repos", [])
 
         if not repos:
-            console.print("[yellow]No repos configured. Add repos to ~/.skill-space/config.toml[/yellow]")
+            console.print(
+                "[yellow]No repos configured. Add repos to ~/.skill-space/config.toml[/yellow]"
+            )
             return
 
         for repo_conf in repos:
@@ -112,6 +127,7 @@ class Indexer:
     def _embed_and_store(self, skill_id: int, parsed: dict) -> None:
         try:
             from skill_space.embedder import Embedder
+
             text = f"{parsed['name']} {parsed.get('topic', '')} {parsed.get('description', '')}"
             vec = Embedder().encode(text)
             self.store.store_embedding(skill_id, vec)
@@ -120,6 +136,7 @@ class Indexer:
 
     def drift_report(self) -> None:
         from rich.table import Table
+
         skills = self.store.all_skills()
         t = Table(title="Drift Report — Potentially Stale Skills")
         t.add_column("Skill")
@@ -127,5 +144,10 @@ class Indexer:
         t.add_column("Last Indexed")
         t.add_column("Repo Trust")
         for s in skills:
-            t.add_row(s["name"], s.get("pinned_commit", "?"), s.get("last_indexed", "?")[:10], s.get("repo_trust", "?"))
+            t.add_row(
+                s["name"],
+                s.get("pinned_commit", "?"),
+                s.get("last_indexed", "?")[:10],
+                s.get("repo_trust", "?"),
+            )
         Console().print(t)

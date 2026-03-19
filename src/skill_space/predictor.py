@@ -58,10 +58,7 @@ class Predictor:
 
         skill_class = skill.get("skill_class", "")
         if skill_class == "Process":
-            topic_done_count = sum(
-                1 for name in completed
-                if self._class_of(name) == "Topic"
-            )
+            topic_done_count = sum(1 for name in completed if self._class_of(name) == "Topic")
             score += min(topic_done_count * 0.05, 0.2)
 
         return max(0.0, min(1.0, score))

@@ -67,6 +67,7 @@ class Store:
     def _init_schema(self) -> None:
         try:
             import sqlite_vec  # type: ignore
+
             self.conn.load_extension(sqlite_vec.loadable_path())
             self.conn.execute(CREATE_SKILL_VECS)
         except Exception:
@@ -100,6 +101,7 @@ class Store:
 
     def store_embedding(self, skill_id: int, vector: list[float]) -> None:
         import json
+
         self.conn.execute(
             "INSERT OR REPLACE INTO skill_vecs(skill_id, embedding) VALUES (?, ?)",
             (skill_id, json.dumps(vector)),

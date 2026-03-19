@@ -38,7 +38,9 @@ def display_results(results: list[SkillMatch]) -> None:
 
 def display_suggestion(suggestion: Optional[SkillMatch]) -> None:
     if suggestion is None:
-        console.print("[yellow]No suggestion available — index more skills or complete more learning events.[/yellow]")
+        console.print(
+            "[yellow]No suggestion available — index more skills or complete more learning events.[/yellow]"
+        )
         return
 
     s = suggestion.skill

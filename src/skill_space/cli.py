@@ -26,6 +26,7 @@ app.add_typer(space_app, name="space")
 
 # ── index ──────────────────────────────────────────────────────────────────────
 
+
 @index_app.command("run")
 def index_run(
     repo: str = typer.Option(None, help="Single repo URL to index (overrides config)."),
@@ -33,24 +34,32 @@ def index_run(
 ) -> None:
     """Crawl configured repos, parse SKILL.md files, embed and store."""
     from skill_space.indexer import Indexer
+
     indexer = Indexer()
     indexer.run(repo_url=repo, force=force)
 
 
 # ── search ─────────────────────────────────────────────────────────────────────
 
+
 @search_app.command("query")
 def search_query(
-    query: str = typer.Argument(..., help="Free-text query, e.g. 'create something visual with 3d'"),
-    skill_class: str = typer.Option(None, "--class", help="Filter: Role | Topic | Process | OneStepProcess"),
+    query: str = typer.Argument(
+        ..., help="Free-text query, e.g. 'create something visual with 3d'"
+    ),
+    skill_class: str = typer.Option(
+        None, "--class", help="Filter: Role | Topic | Process | OneStepProcess"
+    ),
     lang: str = typer.Option("en", "--lang", help="Language filter."),
     top: int = typer.Option(5, "--top", help="Number of results."),
 ) -> None:
     """Semantic + fuzzy search across all indexed skills."""
     from skill_space.matcher import Matcher
+
     matcher = Matcher()
     results = matcher.search(query=query, skill_class=skill_class, lang=lang, top=top)
     from skill_space.display import display_results
+
     display_results(results)
 
 
@@ -63,18 +72,22 @@ def search_read(
 ) -> None:
     """Template-based tuple matching (JavaSpaces / Linda style)."""
     from skill_space.matcher import Matcher
+
     matcher = Matcher()
     results = matcher.read_template(template)
     from skill_space.display import display_results
+
     display_results(results)
 
 
 # ── learn ──────────────────────────────────────────────────────────────────────
 
+
 @learn_app.command("claim")
 def learn_claim(skill_name: str = typer.Argument(...)) -> None:
     """Mark a skill as 'currently learning'."""
     from skill_space.journal import Journal
+
     Journal().claim(skill_name)
     console.print(f"[green]Claimed:[/green] {skill_name}")
 
@@ -86,6 +99,7 @@ def learn_done(
 ) -> None:
     """Record completion of a skill at a given mastery level."""
     from skill_space.journal import Journal
+
     Journal().done(skill_name, level=level)
     console.print(f"[green]Done:[/green] {skill_name} at level {level}")
 
@@ -96,17 +110,21 @@ def learn_next(
 ) -> None:
     """Predict the best next skill to learn based on your journal."""
     from skill_space.predictor import Predictor
+
     suggestion = Predictor().next_skill(topic=topic)
     from skill_space.display import display_suggestion
+
     display_suggestion(suggestion)
 
 
 # ── space ──────────────────────────────────────────────────────────────────────
 
+
 @space_app.command("stats")
 def space_stats() -> None:
     """Show space statistics: repos indexed, skill count, last sync."""
     from skill_space.store import Store
+
     Store().print_stats()
 
 
@@ -114,6 +132,7 @@ def space_stats() -> None:
 def space_drift() -> None:
     """Detect stale skills: pinned commits behind HEAD, old last-touched dates."""
     from skill_space.indexer import Indexer
+
     Indexer().drift_report()
 
 

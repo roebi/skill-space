@@ -23,9 +23,9 @@ from skill_space.store import Store
 # Skill class hierarchy — partial membership across adjacent classes
 _CLASS_MEMBERSHIP: dict[str, dict[str, float]] = {
     "OneStepProcess": {"OneStepProcess": 1.0, "Process": 0.7, "Topic": 0.1, "Role": 0.0},
-    "Process":        {"Process": 1.0, "OneStepProcess": 0.6, "Topic": 0.2, "Role": 0.0},
-    "Topic":          {"Topic": 1.0, "Process": 0.3, "Role": 0.1, "OneStepProcess": 0.2},
-    "Role":           {"Role": 1.0, "Topic": 0.1, "Process": 0.0, "OneStepProcess": 0.0},
+    "Process": {"Process": 1.0, "OneStepProcess": 0.6, "Topic": 0.2, "Role": 0.0},
+    "Topic": {"Topic": 1.0, "Process": 0.3, "Role": 0.1, "OneStepProcess": 0.2},
+    "Role": {"Role": 1.0, "Topic": 0.1, "Process": 0.0, "OneStepProcess": 0.0},
 }
 
 
@@ -50,6 +50,7 @@ def fuzzy_trust(trust: str) -> float:
 
 # ── Template parser (Linda-style) ──────────────────────────────────────────────
 
+
 def parse_template(template: str) -> dict:
     """
     Parse 'skill_class=Process, crud_verb=create, topic=*' into a dict.
@@ -64,6 +65,7 @@ def parse_template(template: str) -> dict:
 
 
 # ── Result dataclass ───────────────────────────────────────────────────────────
+
 
 @dataclass
 class SkillMatch:
@@ -98,6 +100,7 @@ class Matcher:
         sem_scores: dict[str, float] = {}
         try:
             from skill_space.embedder import Embedder
+
             q_vec = Embedder().encode(query)
             sem_scores = self._cosine_all(q_vec, skills)
         except Exception:
@@ -114,7 +117,7 @@ class Matcher:
             class_score = fuzzy_class_match(skill_class, s.get("skill_class"))
             tag_score = fuzzy_token_overlap(query_tokens, tags)
             trust_score = fuzzy_trust(s.get("repo_trust", "high"))
-            fuzzy = (class_score * 0.4 + tag_score * 0.5 + trust_score * 0.1)
+            fuzzy = class_score * 0.4 + tag_score * 0.5 + trust_score * 0.1
 
             # Semantic layer
             semantic = sem_scores.get(s["name"], 0.0)
@@ -152,7 +155,11 @@ class Matcher:
                 if field_name == "skill_class":
                     m = fuzzy_class_match(v, skill_val)
                 else:
-                    m = 1.0 if skill_val == v else (0.5 if v.lower() in str(skill_val).lower() else 0.0)
+                    m = (
+                        1.0
+                        if skill_val == v
+                        else (0.5 if v.lower() in str(skill_val).lower() else 0.0)
+                    )
 
                 score *= m
                 reasons.append(f"{field_name}={m:.2f}")
@@ -166,6 +173,7 @@ class Matcher:
     def _cosine_all(self, q_vec: list[float], skills: list[dict]) -> dict[str, float]:
         import numpy as np
         from skill_space.embedder import Embedder
+
         emb = Embedder()
         scores: dict[str, float] = {}
         q = np.array(q_vec)
