@@ -4,4 +4,4 @@ import skill_space
 
 
 def test_version():
-    assert skill_space.__version__ == "0.1.0"
+    assert skill_space.__version__ == "0.2.0"

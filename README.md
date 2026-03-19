@@ -7,17 +7,25 @@ Inspired by David Gelernter's Linda coordination language and JavaSpaces,
 and lets you query them using two complementary mechanisms:
 
 - **Fuzzy layer** — membership-function scoring on structured metadata
-  (`skill_class`, `crud_verb`, `topic`, `requires_role`).
-- **Semantic layer** — RAG / cosine similarity on SKILL.md descriptions
-  via `sentence-transformers`.
+  (`skill_class`, `crud_verb`, `topic`, `requires_role`). Pure Python, no heavy deps.
+- **Semantic layer** *(optional)* — cosine similarity on SKILL.md descriptions
+  via `sentence-transformers`. Opt in only if you want it.
 
 These are **two distinct things**: the semantic layer finds what is _similar_,
 the fuzzy layer reasons about how well something _fits your current taxonomy and context_.
 
 ## Install
 
+**Default** — fuzzy matching only, lightweight, no PyTorch:
+
 ```bash
-uv pip install -e ".[dev]"
+pip install skill-tuple-space
+```
+
+**With semantic search** — adds `sentence-transformers` + PyTorch (~200MB CPU / ~3GB CUDA):
+
+```bash
+pip install "skill-tuple-space[semantic]"
 ```
 
 ## Quickstart
