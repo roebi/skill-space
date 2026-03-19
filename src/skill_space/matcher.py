@@ -146,7 +146,6 @@ class Matcher:
             for field_name, value in tmpl.items():
                 if value == "*":
                     continue
-                fuzzy = value.startswith("~")
                 v = value.lstrip("~")
                 skill_val = s.get(field_name, "")
 

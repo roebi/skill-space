@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Optional
 
 from skill_space.journal import Journal
-from skill_space.matcher import Matcher, SkillMatch, fuzzy_class_match, fuzzy_trust
+from skill_space.matcher import Matcher, SkillMatch, fuzzy_trust
 from skill_space.store import Store
 
 
