@@ -1,10 +1,7 @@
 """Tests for matcher.py — fuzzy membership functions and template parsing."""
 
-import pytest
-
 from skill_space.matcher import (
     Matcher,
-    SkillMatch,
     fuzzy_class_match,
     fuzzy_token_overlap,
     fuzzy_trust,
