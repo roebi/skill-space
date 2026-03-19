@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-03-19
+
+### Fixed
+- Indexer now reads `description` from frontmatter field directly (was reading first body paragraph, missing the actual skill description)
+- Metadata parsing simplified — handles missing or non-dict `metadata` block gracefully
+- Language detection extended to `-de` suffix skills
+
 ## [0.2.0] - 2026-03-19
 
 ### Changed

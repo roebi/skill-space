@@ -35,30 +35,34 @@ def _parse_skill_md(path: Path) -> Optional[dict]:
         fm = yaml.safe_load(match.group(1))
     except yaml.YAMLError:
         return None
-    # Extract body description (first non-empty line after frontmatter)
-    body = text[match.end() :].strip()
-    first_para = body.split("\n\n")[0].strip().lstrip("#").strip()
+
+    meta = fm.get("metadata", {}) or {}
+    if not isinstance(meta, dict):
+        meta = {}
+
+    # description: prefer frontmatter field, fall back to first body paragraph
+    description = fm.get("description", "")
+    if not description:
+        body = text[match.end() :].strip()
+        description = body.split("\n\n")[0].strip().lstrip("#").strip()
+    # flatten multiline yaml string
+    description = " ".join(str(description).split())
+
     return {
         "name": fm.get("name", path.parent.name),
-        "skill_class": fm.get("metadata", {}).get("skill-class")
-        if isinstance(fm.get("metadata"), dict)
-        else None,
-        "crud_verb": fm.get("metadata", {}).get("crud-verb")
-        if isinstance(fm.get("metadata"), dict)
-        else None,
-        "topic": fm.get("metadata", {}).get("topic")
-        if isinstance(fm.get("metadata"), dict)
-        else None,
-        "requires_role": fm.get("metadata", {}).get("requires-role")
-        if isinstance(fm.get("metadata"), dict)
-        else None,
-        "language": "en"
-        if path.parent.name.endswith("-en")
-        else fm.get("metadata", {}).get("lang", "en")
-        if isinstance(fm.get("metadata"), dict)
-        else "en",
-        "description": first_para,
-        "fuzzy_tags": json.dumps(_extract_tags(fm, body)),
+        "skill_class": meta.get("skill-class"),
+        "crud_verb": meta.get("crud-verb"),
+        "topic": meta.get("topic"),
+        "requires_role": meta.get("requires-role"),
+        "language": (
+            "en"
+            if path.parent.name.endswith("-en")
+            else "de"
+            if path.parent.name.endswith("-de")
+            else meta.get("lang", "en")
+        ),
+        "description": description,
+        "fuzzy_tags": json.dumps(_extract_tags(fm, text[match.end() :])),
         "last_indexed": datetime.now(timezone.utc).isoformat(),
     }
 
