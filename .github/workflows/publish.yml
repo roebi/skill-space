@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/skill-space
+      url: https://pypi.org/p/skill-tuple-space
     permissions:
       id-token: write   # required for trusted publishing (no API key needed)
 

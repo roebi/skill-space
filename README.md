@@ -1,9 +1,9 @@
-# skill-space
+# skill-tuple-space
 
 **Fuzzy Tuple Space for Agent Skills.**
 
 Inspired by David Gelernter's Linda coordination language and JavaSpaces,
-`skill-space` indexes your agent skill git repos into a local SQLite store
+`skill-tuple-space` indexes your agent skill git repos into a local SQLite store
 and lets you query them using two complementary mechanisms:
 
 - **Fuzzy layer** — membership-function scoring on structured metadata
