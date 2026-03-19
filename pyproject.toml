@@ -30,6 +30,9 @@ dev = [
 [project.scripts]
 skill-space = "skill_space.cli:app"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/skill_space"]
+
 [tool.hatch.envs.default]
 installer = "uv"
 
