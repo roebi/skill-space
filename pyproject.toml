@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "skill-tuple-space"
-version = "0.1.0"
+version = "0.2.0"
 description = "Fuzzy Tuple Space for Agent Skills — index, search, and predict across skill git repos"
 readme = "README.md"
 license = { text = "MIT" }
@@ -14,12 +14,19 @@ dependencies = [
     "typer>=0.12",
     "rich>=13",
     "gitpython>=3.1",
-    "sentence-transformers>=3",
     "sqlite-vec>=0.1",
     "pyyaml>=6",
 ]
 
+[project.urls]
+Homepage   = "https://github.com/roebi/skill-space"
+Repository = "https://github.com/roebi/skill-space"
+Issues     = "https://github.com/roebi/skill-space/issues"
+
 [project.optional-dependencies]
+semantic = [
+    "sentence-transformers>=3",
+]
 dev = [
     "pytest>=8",
     "mypy>=1.10",
